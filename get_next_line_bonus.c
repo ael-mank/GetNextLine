@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mank <ael-mank@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 20:05:27 by ael-mank          #+#    #+#             */
-/*   Updated: 2023/12/08 17:39:08 by ael-mank         ###   ########.fr       */
+/*   Updated: 2023/12/08 17:39:25 by ael-mank         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 
 static char	*ft_fill(int fd, char *stash, char *buffer)
@@ -91,25 +91,25 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	char		*buffer;
-	static char	*stash = NULL;
+	static char	*stash[FD_MAX];
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(stash);
+		free(stash[fd]);
 		free(buffer);
-		stash = NULL;
+		stash[fd] = NULL;
 		buffer = NULL;
 		return (0);
 	}
 	if (!buffer)
 		return (NULL);
-	line = ft_fill(fd, stash, buffer);
+	line = ft_fill(fd, stash[fd], buffer);
 	free(buffer);
 	buffer = NULL;
 	if (!line)
 		return (NULL);
-	stash = ft_collect_leftover(line);
+	stash[fd] = ft_collect_leftover(line);
 	ft_update_line(&line);
 	return (line);
 }
