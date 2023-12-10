@@ -6,7 +6,7 @@
 /*   By: ael-mank <ael-mank@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 20:05:27 by ael-mank          #+#    #+#             */
-/*   Updated: 2023/12/08 17:39:08 by ael-mank         ###   ########.fr       */
+/*   Updated: 2023/12/10 16:23:51 by ael-mank         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ static char	*ft_fill(int fd, char *stash, char *buffer)
 			break ;
 		buffer[bytesread] = 0;
 		if (!stash)
-			stash = ft_strdup("");
-		tmp = stash;
-		stash = ft_strjoin(tmp, buffer);
-		free(tmp);
-		tmp = NULL;
+			stash = ft_strdup(buffer);
+		else
+		{
+			tmp = stash;
+			stash = ft_strjoin(tmp, buffer);
+			free(tmp);
+		}
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -98,8 +100,6 @@ char	*get_next_line(int fd)
 	{
 		free(stash);
 		free(buffer);
-		stash = NULL;
-		buffer = NULL;
 		return (0);
 	}
 	if (!buffer)
