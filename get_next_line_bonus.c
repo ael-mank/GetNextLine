@@ -6,7 +6,7 @@
 /*   By: ael-mank <ael-mank@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 20:05:27 by ael-mank          #+#    #+#             */
-/*   Updated: 2023/12/08 17:39:25 by ael-mank         ###   ########.fr       */
+/*   Updated: 2023/12/10 16:28:41 by ael-mank         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ static char	*ft_fill(int fd, char *stash, char *buffer)
 			break ;
 		buffer[bytesread] = 0;
 		if (!stash)
-			stash = ft_strdup("");
-		tmp = stash;
-		stash = ft_strjoin(tmp, buffer);
-		free(tmp);
-		tmp = NULL;
+			stash = ft_strdup(buffer);
+		else
+		{
+			tmp = stash;
+			stash = ft_strjoin(tmp, buffer);
+			free(tmp);
+		}
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -98,8 +100,6 @@ char	*get_next_line(int fd)
 	{
 		free(stash[fd]);
 		free(buffer);
-		stash[fd] = NULL;
-		buffer = NULL;
 		return (0);
 	}
 	if (!buffer)
@@ -138,23 +138,27 @@ tr -dc "A-Za-z 0-9" < /dev/urandom | fold -w100|head -n 10000 > bigfile.txt
 */
 // int	main(void)
 // {
-// 	int		fd;
 // 	char	*line;
+// 	char	*line2;
 // 	int		i;
 
-// 	fd = open("bigfile.txt", O_RDONLY);
-// 	if (fd == -1)
+// 	int fd1, fd2;
+// 	fd1 = open("bigfile1.txt", O_RDONLY);
+// 	fd2 = open("bigfile2.txt", O_RDONLY);
+// 	if (fd1 == -1 || fd2 == -1)
 // 	{
 // 		perror("Error opening file");
 // 		return (1);
 // 	}
 // 	i = 0;
-// 	while (line = get_next_line(fd))
+// 	while ((line = get_next_line(fd1)) && (line2 = get_next_line(fd2)))
 // 	{
 // 		printf("[%i] : %s\n", i, line);
+// 		printf("[%i] : %s\n", i, line2);
 // 		free(line);
 // 		i++;
 // 	}
-// 	close(fd);
+// 	close(fd1);
+// 	close(fd2);
 // 	return (0);
 // }
